@@ -1,9 +1,9 @@
 name = "to_f90"
 version = "0.1.0"
-license = "unknown"
+license = "MIT"
 author = "Alan Miller"
 maintainer = "44500364+jbdv-no@users.noreply.github.com"
-copyright = "Copyright 2021, Alan Miller"
+copyright = "Copyright 2021, Alan Miller, jbdv-no"
 
 [build]
 auto-executables = true
