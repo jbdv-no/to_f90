@@ -1,10 +1,56 @@
 # to_f90
 
-Takes Fortran 77 code in standard format and makes some changes to produce
-free-format Fortran 90 code.
+__Takes Fortran 77 code in standard format and makes some changes to produce
+free-format Fortran 90 code.__
 
-__N.B.___ It expects STANDARD F77 code. Non-standard extensions such as 
+_N.B._ It expects STANDARD F77 code. Non-standard extensions such as 
 `DO .. END DO` (i.e. no label) or in-line comments may cause havoc!
+
+## fpm usage
+
+I have taken the liberty of making some minor changes and turning [Alan Miller's to_f90][1] into a
+[fpm][2] package. 
+
+These changes were:
+
+- split the original single file into a standalone program (`./app/to_f90.f90`) and two module files
+  (`./src/implicit.f90` and `./src/interfaced.f90`)
+
+- the latter module (`interfaced`) contains procedures that were previously external to the main 
+  program, but with explicit interfaces. I removed the interfaces from the main program, moved the 
+  procedures to this new module, and then `use`'d the module in the main program. Could very well
+  be a glaring oversight from me, but I see no reason for not doing this?
+
+- all files have been _polished_ using 
+  
+  ```
+  nagfor =polish 
+    -alter_comments -array_constructor_brackets=Square -blank_line_after_decls -free -indent=2 
+    -indent_comment_marker -indent_comments -keep_blank_lines -keep_comments -kind_keyword=Remove 
+    -kwcase=C -margin=0 -name_scopes=Insert -terminate_do_with_enddo -wrap_comments 
+    *.f90
+  ```
+
+  then I manually added spaces before numbered labels, to still allow convenient code folding in
+  an IDE
+
+You can build the package like so (see [fpm's documentation][3] for more options)
+
+```
+fpm build --profile release
+```
+
+And then install it, for effortless use right from the command line, like so 
+
+``` 
+fpm install --profile release
+```
+
+[1]: https://wp.csiro.au/alanmiller/to_f90.f90
+[2]: https://github.com/fortran-lang/fpm
+[3]: https://github.com/fortran-lang/fpm/blob/master/PACKAGING.md
+
+# Original _in-source_ documentation:
 
 ## Changes included are:
 
@@ -157,48 +203,3 @@ will be the input name (and directory) with extension `.f90`.
 Author - Alan Miller  (amiller @ bigpond.net.au)
 
 WWW-page: https://wp.csiro.au/alanmiller/
-
-----
-
-## Packaging with `fpm`
-
-I have taken the liberty of making some minor changes and turning [Alan Miller's to_f90][1] into a
-`fpm` package. 
-
-These changes were:
-
-- split the original single file into a standalone program (`./app/to_f90.f90`) and two module files
-  (`./src/implicit.f90` and `./src/interfaced.f90`)
-
-- the latter module (`interfaced`) contains procedures that were previously external to the main 
-  program, but with explicit interfaces. I removed the interfaces from the main program, moved the 
-  procedures to this new module, and then `use`'d the module in the main program. Could very well
-  be a glaring oversight from me, but I see no reason for not doing this?
-
-- all files have been _polished_ using 
-  
-  ```
-  nagfor =polish 
-    -alter_comments -array_constructor_brackets=Square -blank_line_after_decls -free -indent=2 
-    -indent_comment_marker -indent_comments -keep_blank_lines -keep_comments -kind_keyword=Remove 
-    -kwcase=C -margin=0 -name_scopes=Insert -terminate_do_with_enddo -wrap_comments 
-    *.f90
-  ```
-
-  then I manually added spaces before numbered labels, to still allow convenient code folding in
-  and IDE
-
-You can build the package like so (see [fpm's documentation][2] for more options)
-
-```
-fpm build --profile release
-```
-
-And then install it, for effortless use right from the command line, like so 
-
-``` 
-fpm install --profile release
-```
-
-[1]: https://wp.csiro.au/alanmiller/to_f90.f90
-[2]: https://github.com/fortran-lang/fpm/blob/master/PACKAGING.md
