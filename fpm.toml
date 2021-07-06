@@ -1,0 +1,19 @@
+name = "to_f90"
+version = "0.1.0"
+license = "unknown"
+author = "Alan Miller"
+maintainer = "44500364+jbdv-no@users.noreply.github.com"
+copyright = "Copyright 2021, Alan Miller"
+
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+
+[install]
+library = false
+
+[[ executable ]]
+name="to_f90"
+source-dir="app"
+main="to_f90.f90"
